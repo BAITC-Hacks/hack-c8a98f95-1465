@@ -27,11 +27,11 @@ export function isRequestCanceled(error) {
   return axios.isCancel(error) || error?.code === 'ERR_CANCELED'
 }
 
-async function request(method, url, { data, params, signal } = {}) {
+async function request(method, url, { data, params, signal, timeout } = {}) {
   // Capture the active identity now, so switching profiles cannot alter an in-flight request.
   const headers = { ...profileHeaders }
   try {
-    const response = await client.request({ method, url, data, params, signal, headers })
+    const response = await client.request({ method, url, data, params, signal, headers, ...(timeout ? { timeout } : {}) })
     if (!response.data || !Object.prototype.hasOwnProperty.call(response.data, 'data')) {
       throw new ApiError('Сервер вернул неожиданный ответ. Попробуйте ещё раз.', response.status)
     }
@@ -59,7 +59,7 @@ export const api = {
   createTask: (payload) => unwrap(request('post', '/tasks', { data: payload })),
   updateTask: (id, payload) => unwrap(request('put', `/tasks/${id}`, { data: payload })),
   publishTask: (id) => unwrap(request('post', `/tasks/${id}/publish`, { data: { confirmed: true } })),
-  questions: (payload) => unwrap(request('post', '/ai/questions', { data: payload })),
+  questions: (payload) => unwrap(request('post', '/ai/questions', { data: payload, timeout: 50000 })),
   createOffer: (id, payload) => unwrap(request('post', `/tasks/${id}/offers`, { data: payload })),
   taskOffers: (id) => unwrap(request('get', `/tasks/${id}/offers`)),
   decideOffer: (id, decision) => unwrap(request('patch', `/offers/${id}/decision`, { data: { decision } })),

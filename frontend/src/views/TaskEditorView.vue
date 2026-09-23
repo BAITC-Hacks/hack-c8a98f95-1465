@@ -91,6 +91,7 @@ async function askAI() {
   if (aiLoading.value || busy.value) return
   aiLoading.value = true
   aiError.value = null
+  assistance.value = null
   const current = generation
   try {
     const result = await api.questions({
@@ -213,6 +214,7 @@ onBeforeUnmount(() => { editorState.dirty = false; editorState.busy = false; gen
             <label for="initial-context">Описание проблемы</label>
             <textarea id="initial-context" v-model="form.context" name="context" aria-describedby="help-context" rows="6" maxlength="10000" placeholder="Например: первокурсники не знают, когда проходят консультации преподавателей. Сейчас расписание приходится искать в разных чатах. Хотим собрать его в одном месте." @input="changed('context')"></textarea>
             <small id="help-context" class="field-help">Опишите, кому нужна помощь и что сейчас не получается. Помощник задаст уточняющие вопросы после сохранения.</small>
+            <small class="field-help">При подключённом OpenAI описание отправляется в AI после сохранения. Не указывайте персональные данные и секреты.</small>
           </div>
         </fieldset>
 
@@ -221,10 +223,12 @@ onBeforeUnmount(() => { editorState.dirty = false; editorState.busy = false; gen
             <div class="section-heading"><span class="editor-ai-icon"><Icon name="sparkles" /></span><div><p class="eyebrow">ПОМОЩНИК ПО ОПИСАНИЮ</p><h2>Уточните задачу с помощником</h2></div></div>
             <p class="muted">Выберите вопрос, чтобы перейти к нужному полю. Добавьте ответ в описание и сохраните карточку.</p>
             <p v-if="assistance?.mode === 'mock'" class="ai-notice"><Icon name="info" /> <span>Демо: вопросы формирует локальная AI-заглушка.</span></p>
+            <p v-else-if="assistance?.mode === 'openai'" class="ai-notice" role="status"><Icon name="check-circle" /><span>OpenAI · {{ assistance.model }}</span></p>
             <ol v-if="assistance" class="question-list">
               <li v-for="question in assistance.questions" :key="question.id"><a :href="'#field-' + question.field">{{ question.question }}<Icon name="arrow-up-right" /></a></li>
             </ol>
             <ApiError v-if="aiError" :error="aiError" />
+            <p class="muted"><small>При подключённом OpenAI описание и детали отправляются в AI. Поле «Контакт» не отправляется; не добавляйте персональные данные в другие поля.</small></p>
             <button type="button" class="button button-secondary" :disabled="aiLoading || busy || form.context.trim().length < 3" @click="askAI">
               <Icon name="sparkles" />{{ aiLoading ? 'Готовим вопросы…' : assistance ? 'Обновить вопросы' : 'Получить вопросы AI' }}
             </button>

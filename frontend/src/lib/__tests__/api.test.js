@@ -97,7 +97,17 @@ describe('backend API contract', () => {
     const result = { mode: 'mock', questions: [{ id: 'clarify_contact', field: 'contact', question: 'Как связаться?' }], suggestedFields: { context: input.description } }
     request.mockResolvedValueOnce(response(result))
     expect(await api.questions(input)).toEqual(result)
-    expect(transportCall(0)).toMatchObject({ method: 'post', url: '/ai/questions', data: input })
+    expect(transportCall(0)).toMatchObject({ method: 'post', url: '/ai/questions', data: input, timeout: 50000 })
+  })
+
+  it('keeps normal requests fast and preserves OpenAI errors for retry', async () => {
+    request.mockResolvedValueOnce(response({ mode: 'openai', model: 'test-model', questions: [] }))
+    expect((await api.questions({ description: 'Описание' })).mode).toBe('openai')
+    request.mockResolvedValueOnce(response([]))
+    await api.myTasks()
+    expect(transportCall(1).timeout).toBe(20000)
+    request.mockRejectedValueOnce({ response: { status: 503, data: { message: 'Лимит OpenAI исчерпан.' } } })
+    await expect(api.questions({ description: 'Описание' })).rejects.toMatchObject({ status: 503, message: 'Лимит OpenAI исчерпан.' })
   })
 
   it('retains backend field errors for an actionable validation message', async () => {

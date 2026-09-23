@@ -18,6 +18,7 @@ const env = {
   APP_ENV: 'testing', APP_KEY: 'base64:' + randomBytes(32).toString('base64'),
   APP_CONFIG_CACHE: join(temp, 'config.php'), DB_CONNECTION: 'sqlite', DB_DATABASE: database, DB_URL: '',
   DEMO_MODE: 'true', CACHE_STORE: 'array', SESSION_DRIVER: 'array',
+  AI_PROVIDER: 'mock', OPENAI_API_KEY: '',
   CORS_ALLOWED_ORIGINS: `http://127.0.0.1:${process.env.E2E_PORT || '5174'}`,
 }
 

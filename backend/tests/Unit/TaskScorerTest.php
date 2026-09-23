@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Task;
-use App\Services\AiQuestions;
+use App\Services\MockAiQuestions;
 use App\Services\TaskScorer;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -45,7 +45,7 @@ class TaskScorerTest extends TestCase
 
     public function test_ai_is_deterministic_and_never_invents_card_data(): void
     {
-        $service = new AiQuestions;
+        $service = new MockAiQuestions;
         $description = 'Первокурсникам трудно практиковать английский.';
         $result = $service->generate($description, ['users' => 'Первокурсники']);
         self::assertSame($result, $service->generate($description, ['users' => 'Первокурсники']));
@@ -59,7 +59,7 @@ class TaskScorerTest extends TestCase
     public function test_ai_asks_three_verification_questions_for_a_complete_brief(): void
     {
         $fields = array_fill_keys(array_keys(TaskScorer::CRITERIA), 'Сведения заказчика');
-        $result = (new AiQuestions)->generate('Проблема', $fields);
+        $result = (new MockAiQuestions)->generate('Проблема', $fields);
         self::assertSame([], $result['missingFields']);
         self::assertCount(3, $result['questions']);
         self::assertSame($fields, $result['suggestedFields']);

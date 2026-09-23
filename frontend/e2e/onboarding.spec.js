@@ -58,7 +58,7 @@ test('инструкция объясняет рейтинг и AI и ведёт
   await expect(page.getByRole('heading', { level: 1, name: 'Как работает AlemEdu' })).toBeVisible()
   await expect(page.locator('#rating')).toContainText('Рейтинг показывает полноту описания')
   await expect(page.locator('#rating')).toContainText('не оценивает качество будущего решения и навыки команды')
-  await expect(page.locator('.guide-demo-panel')).toContainText('Внешняя AI-модель пока не подключена')
+  await expect(page.locator('.guide-demo-panel')).toContainText('AI-вопросы не изменяют рейтинг и статус задачи')
 
   await page.getByRole('link', { name: 'Начать как команда', exact: true }).click()
   await expect(page).toHaveURL(/\/\?role=team#start$/)

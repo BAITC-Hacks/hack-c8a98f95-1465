@@ -41,12 +41,18 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\backend\start.ps1 -Port 18
 - Создание, изменение, чтение и подтверждённая публикация задач.
 - Прозрачный рейтинг, подтверждение полей, пересчёт после правок.
 - Каталог с фильтрами, поиском на русском и сортировкой.
-- Локальная предсказуемая AI-заглушка с минимум тремя вопросами.
+- OpenAI Responses API со структурированными вопросами и отдельный локальный деморежим.
 - Отклики и ручные решения; можно выбрать несколько команд.
 - Два демопрофиля заказчиков, пять команд, пять задач и пять откликов.
 - Проверки PHPUnit, реальный HTTP-сценарий и GitHub Actions.
 
 При смене порта задайте тот же адрес в `frontend/.env` через `VITE_API_URL` и перезапустите Vite.
+
+## Настройка OpenAI
+
+После подготовки окружения: `php artisan ai:configure` (скрытый ввод ключа в локальный `.env`), затем `php artisan ai:check` (один платный запрос на синтетических данных). На Windows вместо `php` можно использовать `& C:\xampp\php\php.exe`. Перезапустите backend после настройки.
+
+Без ключа режим `auto` возвращает явно обозначенные демовопросы. Режим `openai` требует рабочий API и не подменяет сбой заглушкой. [Полная инструкция и промпт](docs/AI.md).
 
 ## Интеграция с frontend
 
@@ -130,7 +136,11 @@ php scripts/smoke.php http://127.0.0.1:18081/api
 - `app/Http/Resources/` — формат ответов camelCase.
 - `app/Services/TaskScorer.php` — веса, уровни и подсказки.
 - `app/Services/TaskEditor.php` — подтверждение и публикация.
-- `app/Services/AiQuestions.php` — локальная AI-заглушка.
+- `app/Services/AiQuestions.php` — выбор провайдера и сохранение исходных фактов.
+- `app/Services/OpenAiQuestions.php` — OpenAI Responses API, схема ответа и обработка ошибок.
+- `app/Services/MockAiQuestions.php` — автономные демовопросы.
+- `resources/prompts/task-questions.txt` — готовый промпт.
+- `app/Console/Commands/` — безопасная настройка и проверка OpenAI.
 - `database/migrations/`, `database/seeders/` — схема и демоданные.
 - `tests/` — проверки поведения.
 - [Описание AI и пример промпта](docs/AI.md).

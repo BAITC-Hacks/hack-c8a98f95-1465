@@ -159,7 +159,7 @@ X-Demo-Id: 1
 
 ## AI
 
-`POST /ai/questions` принимает `description` (3–10000 символов) и необязательный объект `fields` с семью содержательными полями. Возвращает `mode`, `topic`, `missingFields`, `questions`, `suggestedFields`, `notice`.
+`POST /ai/questions` принимает `description` (3–10000 символов) и необязательный объект `fields` с семью содержательными полями. Суммарно не более 20000 символов. Возвращает `mode` (`openai` или `mock`), `topic`, `missingFields`, `questions`, `suggestedFields`, `notice`; при OpenAI также `model`. Ключ находится только в backend. Ошибки провайдера возвращают `message` и `code`, без подмены ответа демовопросами.
 
 [Полный пример, алгоритм и обработка ошибок](AI.md). Запрос не создаёт Task и не начисляет баллы.
 

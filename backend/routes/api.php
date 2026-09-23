@@ -20,7 +20,7 @@ Route::middleware('demo:customer')->group(function () {
     Route::post('/tasks', [TaskController::class, 'store']);
     Route::put('/tasks/{task}', [TaskController::class, 'update'])->whereNumber('task');
     Route::post('/tasks/{task}/publish', [TaskController::class, 'publish'])->whereNumber('task');
-    Route::post('/ai/questions', [AiController::class, 'questions']);
+    Route::post('/ai/questions', [AiController::class, 'questions'])->middleware('throttle:ai');
     Route::get('/tasks/{task}/offers', [OfferController::class, 'index'])->whereNumber('task');
     Route::patch('/offers/{offer}/decision', [OfferController::class, 'decision'])->whereNumber('offer');
 });
