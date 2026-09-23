@@ -1,0 +1,82 @@
+﻿name: Frontend checks
+
+on:
+  push:
+    paths: ['frontend/**', 'backend/**', '.github/workflows/frontend.yml']
+  pull_request:
+    paths: ['frontend/**', 'backend/**', '.github/workflows/frontend.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      VITE_API_URL: http://127.0.0.1:8000/api
+      E2E_API_URL: http://127.0.0.1:8000/api
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ${{ github.workspace }}/backend/database/frontend-e2e.sqlite
+      DEMO_MODE: 'true'
+      CORS_ALLOWED_ORIGINS: http://127.0.0.1:5173,http://localhost:5173
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Unit tests
+        run: npm test
+      - name: Production build
+        run: npm run build
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, pdo_sqlite, fileinfo, dom, xml, xmlwriter
+          coverage: none
+      - name: Install backend dependencies
+        working-directory: backend
+        run: composer install --no-interaction --prefer-dist
+      - name: Prepare isolated backend database
+        working-directory: backend
+        run: |
+          php scripts/prepare.php
+          touch "$DB_DATABASE"
+          php artisan migrate --seed --force
+      - name: Start backend and wait for health
+        working-directory: backend
+        run: |
+          php artisan serve --host=127.0.0.1 --port=8000 --no-reload > /tmp/alemedu-backend.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8000/api/health; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/alemedu-backend.log
+          exit 1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Browser integration tests
+        run: npm run test:e2e
+      - name: Backend log on failure
+        if: failure()
+        run: cat /tmp/alemedu-backend.log 2>/dev/null || true
+      - name: Upload browser test report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-playwright-report
+          path: |
+            frontend/playwright-report/
+            frontend/test-results/
+          if-no-files-found: ignore
+          retention-days: 7
