@@ -97,7 +97,7 @@ test('ошибка загрузки опубликованной задачи п
   await page.getByRole('button', { name: 'Повторить', exact: true }).click()
   await expect(page.getByRole('heading', { name: task.title, exact: true })).toBeVisible()
   await expect(page.getByRole('alert')).toHaveCount(0)
-  await expect(page.getByText('Опубликована', { exact: true })).toBeVisible()
+  await expect(page.getByText('Открыта для откликов', { exact: true })).toBeVisible()
 })
 
 test('несуществующая задача показывает ошибку API и ссылку в каталог', async ({ page }) => {

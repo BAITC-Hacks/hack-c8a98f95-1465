@@ -4,11 +4,14 @@ import TaskEditorView from './views/TaskEditorView.vue'
 import TaskDetailView from './views/TaskDetailView.vue'
 import WorkspaceView from './views/WorkspaceView.vue'
 import NotFoundView from './views/NotFoundView.vue'
+import HomeView from './views/HomeView.vue'
+import GuideView from './views/GuideView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', redirect: '/catalog' },
+    { path: '/', component: HomeView, meta: { title: 'Главная' } },
+    { path: '/guide', component: GuideView, meta: { title: 'Как это работает' } },
     { path: '/catalog', component: CatalogView, meta: { title: 'Каталог задач' } },
     { path: '/tasks/new', component: TaskEditorView, meta: { title: 'Создать задачу' } },
     { path: '/tasks/:id(\\d+)/edit', component: TaskEditorView, meta: { title: 'Редактор задачи' } },
@@ -18,6 +21,7 @@ const router = createRouter({
   ],
   scrollBehavior(to, from, saved) {
     if (saved) return saved
+    if (to.hash) return { el: to.hash, top: 100 }
     if (to.path === from.path) return false
     return { top: 0 }
   },
