@@ -28,10 +28,10 @@ php artisan serve --host=127.0.0.1 --port=18081 --no-reload
 На Windows также можно запустить из корня:
 
 ```powershell
-.\backend\start.ps1 -Port 18081
+powershell -NoProfile -ExecutionPolicy Bypass -File .\backend\start.ps1 -Port 18081
 ```
 
-Скрипт ищет PHP 8.2+ в PATH, затем в `%LOCALAPPDATA%\AlemEdu\tools\php` и XAMPP. Если зависимостей нет, запускает Composer, затем подготовку БД и сервер. Наличие переносимого PHP/Composer не обязательно для других участников — подойдёт их собственная установка. XAMPP с PHP 8.0 не подходит.
+Скрипт ищет PHP 8.2+ в PATH, затем в `%LOCALAPPDATA%\AlemEdu\tools\php` и XAMPP. Если зависимостей нет, запускает Composer, затем подготовку БД и сервер. Параметр `-ExecutionPolicy Bypass` разрешает запуск этого скрипта только в данном процессе PowerShell; системные настройки не меняются. Наличие переносимого PHP/Composer не обязательно для других участников — подойдёт их собственная установка. XAMPP с PHP 8.0 не подходит.
 
 Параметр `--no-reload` обеспечивает предсказуемый запуск на Windows. Изменения PHP-кода видны сразу; после изменения `.env` перезапустите сервер.
 

@@ -15,7 +15,7 @@ composer dev
 
 API: http://127.0.0.1:8000/api/health
 
-Windows: `./backend/start.ps1 -Port 18081` из корня репозитория.
+Windows из корня репозитория: `powershell -NoProfile -ExecutionPolicy Bypass -File .\backend\start.ps1 -Port 18081`.
 
 - [Полная инструкция запуска и проверки](backend/README.md)
 - [API-контракт для frontend](backend/docs/API.md)
