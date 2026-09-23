@@ -9,7 +9,7 @@ import HomeView from './views/HomeView.vue'
 import GuideView from './views/GuideView.vue'
 
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory('/'),
   routes: [
     { path: '/', component: HomeView, meta: { title: 'Главная' } },
     { path: '/guide', component: GuideView, meta: { title: 'Как это работает' } },

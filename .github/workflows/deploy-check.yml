@@ -1,0 +1,38 @@
+name: Deployment check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  single-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and start the full application
+        run: docker compose up --build -d --wait --wait-timeout 90
+      - name: Check website, deep links, assets, API and data persistence
+        run: |
+          curl --fail http://localhost:8080/ > /tmp/alemedu.html
+          grep -q '/build/assets/' /tmp/alemedu.html
+          curl --fail http://localhost:8080/tasks/2/offers
+          curl --fail http://localhost:8080/api/health
+          curl --fail http://localhost:8080/api/tasks
+          ASSET=$(grep -o '/build/assets/[^" ]*\.js' /tmp/alemedu.html | head -1)
+          curl --fail "http://localhost:8080$ASSET" > /dev/null
+          CODE=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:8080/.env)
+          test "$CODE" = '403' -o "$CODE" = '404'
+          BEFORE=$(docker compose exec -T app php -r 'echo hash_file("sha256", "/data/app.key");')
+          docker compose restart
+          sleep 5
+          AFTER=$(docker compose exec -T app php -r 'echo hash_file("sha256", "/data/app.key");')
+          test "$BEFORE" = "$AFTER"
+          curl --fail http://localhost:8080/api/tasks
+      - name: Container logs
+        if: always()
+        run: docker compose logs --no-color
+      - name: Stop test container
+        if: always()
+        run: docker compose down

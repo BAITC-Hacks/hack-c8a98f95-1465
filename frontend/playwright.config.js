@@ -1,9 +1,10 @@
 import { defineConfig, devices } from '@playwright/test'
 
 const port = Number(process.env.E2E_PORT || 5174)
-const baseURL = 'http://127.0.0.1:' + port
-const managedBackend = !process.env.E2E_API_URL
-const apiURL = process.env.E2E_API_URL || 'http://127.0.0.1:18082/api'
+const deployedURL = process.env.E2E_BASE_URL?.replace(/\/+$/, '')
+const baseURL = deployedURL || 'http://127.0.0.1:' + port
+const managedBackend = !deployedURL && !process.env.E2E_API_URL
+const apiURL = process.env.E2E_API_URL || (deployedURL ? deployedURL + '/api' : 'http://127.0.0.1:18082/api')
 process.env.E2E_API_URL = apiURL
 process.env.E2E_PORT = String(port)
 
@@ -21,7 +22,7 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
-  webServer: [
+  webServer: deployedURL ? [] : [
     ...(managedBackend ? [{
       command: 'node scripts/e2e-backend.mjs',
       url: apiURL + '/health',

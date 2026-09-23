@@ -1,0 +1,15 @@
+services:
+  app:
+    build: .
+    ports:
+      - "${PORT:-8080}:8080"
+    environment:
+      PORT: 8080
+      AI_PROVIDER: mock
+      DEMO_MODE: "true"
+    volumes:
+      - alemedu-data:/data
+    restart: unless-stopped
+
+volumes:
+  alemedu-data:
