@@ -1,7 +1,7 @@
 ﻿import axios from 'axios'
 
 const client = axios.create({
-  baseURL: (import.meta.env.VITE_API_URL || 'http://127.0.0.1:8000/api').replace(/\/+$/, ''),
+  baseURL: (import.meta.env.VITE_API_URL || 'http://127.0.0.1:18081/api').replace(/\/+$/, ''),
   timeout: 20000,
   headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
 })
@@ -61,6 +61,8 @@ export const api = {
   publishTask: (id) => unwrap(request('post', `/tasks/${id}/publish`, { data: { confirmed: true } })),
   questions: (payload) => unwrap(request('post', '/ai/questions', { data: payload })),
   createOffer: (id, payload) => unwrap(request('post', `/tasks/${id}/offers`, { data: payload })),
+  taskOffers: (id) => unwrap(request('get', `/tasks/${id}/offers`)),
+  decideOffer: (id, decision) => unwrap(request('patch', `/offers/${id}/decision`, { data: { decision } })),
   myTasks: () => unwrap(request('get', '/my/tasks')),
   myOffers: () => unwrap(request('get', '/my/offers')),
 }

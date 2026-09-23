@@ -1,9 +1,9 @@
 import { test, expect } from '@playwright/test'
 
-const apiURL = process.env.E2E_API_URL || 'http://127.0.0.1:8000/api'
+const apiURL = process.env.E2E_API_URL || 'http://127.0.0.1:18082/api'
 const customerHeaders = { 'X-Demo-Role': 'customer', 'X-Demo-Id': '1', Accept: 'application/json' }
 
-test('создать → AI → подтвердить рейтинг → опубликовать → каталог → отклик', async ({ page, request }, testInfo) => {
+test('создать → AI → опубликовать → каталог → отклик → решение заказчика', async ({ page, request }, testInfo) => {
   const browserErrors = []
   page.on('pageerror', error => browserErrors.push(error.message))
   const title = 'Практика английского E2E ' + Date.now()
@@ -87,6 +87,16 @@ test('создать → AI → подтвердить рейтинг → опу
   expect(persistedOffers.some(item => item.id === offer.id)).toBeTruthy()
   await page.getByRole('link', { name: 'Посмотреть мои отклики' }).click()
   await expect(page.getByText('Разработать тренажёр парных диалогов.').first()).toBeVisible()
+  await page.getByLabel('Демопрофиль').selectOption('customer:1')
+  await page.getByRole('link', { name: 'Отклики на задачу: ' + title, exact: true }).click()
+  const proposal = page.getByRole('article', { name: 'Отклик команды Steppe Coders', exact: true })
+  await proposal.getByRole('button', { name: 'Выбрать', exact: true }).click()
+  await expect(proposal.locator('.tag')).toHaveText('Команда выбрана')
+  await page.reload()
+  await expect(proposal.locator('.tag')).toHaveText('Команда выбрана')
+  await page.getByLabel('Демопрофиль').selectOption('team:1')
+  await page.getByRole('navigation').getByRole('link', { name: 'Мой кабинет' }).click()
+  await expect(page.locator('.offer-card').filter({ hasText: 'Разработать тренажёр парных диалогов.' }).locator('.tag')).toHaveText('Команда выбрана')
   expect(browserErrors).toEqual([])
 })
 

@@ -13,7 +13,7 @@ const labels = {
   title: 'Название', organization: 'Организация', region: 'Регион', category: 'Тема',
   scope: 'Охват', confirmedFields: 'Подтверждение полей', confirmed: 'Подтверждение карточки',
   description: 'Описание проблемы', idea: 'Идея решения', plan: 'План работы',
-  timeline: 'Сроки', prototypeLink: 'Ссылка на прототип', q: 'Поиск', sort: 'Сортировка',
+  timeline: 'Сроки', prototypeLink: 'Ссылка на прототип', q: 'Поиск', sort: 'Сортировка', decision: 'Решение',
 }
 const message = computed(() => typeof props.error === 'string'
   ? props.error

@@ -22,6 +22,19 @@ beforeEach(() => {
 const response = (data, extra = {}) => ({ status: 200, data: { data, ...extra } })
 
 describe('backend API contract', () => {
+  it('loads customer offers and sends only the explicit decision to the API', async () => {
+    setProfile({ role: 'customer', id: 1 })
+    const offer = { id: 12, taskId: 9, decision: 'pending', team: { id: 2, name: 'Qadam' } }
+    request.mockResolvedValueOnce(response([offer]))
+    expect(await api.taskOffers(9)).toEqual([offer])
+    expect(transportCall(0)).toMatchObject({ method: 'get', url: '/tasks/9/offers' })
+    request.mockResolvedValueOnce(response({ ...offer, decision: 'selected' }))
+    expect((await api.decideOffer(12, 'selected')).decision).toBe('selected')
+    expect(transportCall(1)).toMatchObject({
+      method: 'patch', url: '/offers/12/decision', data: { decision: 'selected' },
+      headers: { 'X-Demo-Role': 'customer', 'X-Demo-Id': '1' },
+    })
+  })
   it('preserves server ratings through create, update, publish, catalogue and offer flow', async () => {
     setProfile({ role: 'customer', id: 2 })
     const draft = { id: 9, score: 37, scoreBreakdown: { context: { points: 37, maxPoints: 47 } }, status: 'draft' }

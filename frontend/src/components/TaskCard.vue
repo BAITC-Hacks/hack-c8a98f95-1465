@@ -6,7 +6,8 @@ import { session } from '../lib/session'
 import Icon from './Icon.vue'
 
 const props = defineProps({ task: { type: Object, required: true } })
-const ownDraft = computed(() => props.task.status === 'draft' && session.profile?.role === 'customer' && Number(session.profile.id) === Number(props.task.ownerId))
+const isOwner = computed(() => session.profile?.role === 'customer' && Number(session.profile.id) === Number(props.task.ownerId))
+const ownDraft = computed(() => props.task.status === 'draft' && isOwner.value)
 const destination = computed(() => `/tasks/${props.task.id}${ownDraft.value ? '/edit' : ''}`)
 const topicStyle = computed(() => {
   const category = (props.task.category || '').toLocaleLowerCase('ru')
@@ -39,6 +40,7 @@ const topicStyle = computed(() => {
       <span class="task-card-score" :aria-label="`Рейтинг готовности: ${task.score} из 100`"><strong>{{ task.score }}</strong><span>/ 100</span></span>
     </div>
     <div class="task-card-footer">
+      <RouterLink v-if="isOwner && task.status === 'published'" class="task-card-offers" :to="`/tasks/${task.id}/offers`" :aria-label="`Отклики на задачу: ${task.title}`"><Icon name="users" :size="18" />Отклики <strong>{{ task.offersCount ?? 0 }}</strong></RouterLink>
       <RouterLink class="task-card-open" :to="destination" :aria-label="`${ownDraft ? 'Редактировать черновик' : 'Открыть задачу'}: ${task.title}`">{{ ownDraft ? 'Редактировать черновик' : 'Открыть задачу' }}<Icon name="arrow-up-right" :size="18" /></RouterLink>
     </div>
   </article>
@@ -55,7 +57,7 @@ const topicStyle = computed(() => {
 .task-topic-icon { color: var(--topic-color); background: var(--topic-bg); display: grid; place-items: center; width: 38px; height: 38px; border-radius: 11px; flex-shrink: 0; }
 .task-card-category .tag { color: var(--topic-color); background: none; padding: 0; font-size: .72rem; line-height: 1.4; }
 .task-draft-label { font-size: .65rem; flex-shrink: 0; }
-.task-card h2 { font-size: 1.12rem; font-weight: 600; line-height: 1.5; letter-spacing: -.025em; margin-bottom: 10px; }
+.task-card h2 { font-size: 1.12rem; font-weight: 600; line-height: 1.5; letter-spacing: 0; margin-bottom: 10px; }
 .task-card h2 a:hover { color: var(--primary, #147d64); }
 .task-card-description { color: var(--muted, #69766e); font-size: .81rem; line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 20px; }
 .task-card-organization { display: flex; align-items: flex-start; gap: 7px; margin-top: auto; padding-top: 0; margin-bottom: 9px; font-size: .76rem; color: #59675f; }
@@ -67,9 +69,12 @@ const topicStyle = computed(() => {
 .task-rating-label { display: block; color: #47584d; font-size: .72rem; font-weight: 500; }
 .task-readiness-label { display: block; color: var(--muted, #69766e); font-size: .66rem; margin-top: 2px; }
 .task-card-score { display: flex; align-items: baseline; gap: 4px; white-space: nowrap; color: var(--primary, #147d64); }
-.task-card-score strong { font-size: 1.8rem; font-weight: 600; line-height: 1; letter-spacing: -.065em; }
+.task-card-score strong { font-size: 1.8rem; font-weight: 600; line-height: 1; letter-spacing: 0; }
 .task-card-score > span { color: #89968d; font-size: .69rem; }
-.task-card-footer { display: flex; border-top: 0; padding-top: 0; }
+.task-card-footer { display: flex; flex-direction: column; gap: 8px; border-top: 0; padding-top: 0; }
+.task-card-offers { display: flex; align-items: center; gap: 8px; padding: 10px 0; color: var(--primary); font-size: .85rem; }
+.task-card-offers strong { margin-left: auto; font-variant-numeric: tabular-nums; }
+.task-card-organization span, .task-card-meta > span { overflow-wrap: anywhere; min-width: 0; }
 .task-card-open { display: flex; width: 100%; align-items: center; justify-content: space-between; padding: 11px 13px; border-radius: 8px; color: var(--primary, #147d64); background: var(--surface-muted, #f5f8f5); font-size: .78rem; font-weight: 550; transition: background .18s; }
 .task-card-open:hover { background: #e8f2ec; }
 @media (prefers-reduced-motion: reduce) { .task-card:hover { transform: none; } }

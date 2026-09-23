@@ -36,7 +36,7 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "@php artisan serve --host=127.0.0.1 --port=8000 --no-reload"
+            "@php artisan serve --host=127.0.0.1 --port=18081 --no-reload"
         ],
         "test": [
             "@php artisan config:clear --ansi",

@@ -72,16 +72,26 @@ class ApiTest extends TestCase
             $this->patchJson("/api/offers/{$offerId}/decision", ['decision' => 'selected'], $this->customer())
                 ->assertOk()->assertJsonPath('data.decision', 'selected');
         }
+        foreach ([1, 2] as $index => $teamId) {
+            $this->getJson('/api/my/offers', $this->team($teamId))
+                ->assertOk()->assertJsonFragment(['id' => $offerIds[$index], 'decision' => 'selected']);
+        }
         $this->assertSame(2, Offer::where('task_id', $id)->where('decision', 'selected')->count());
         $this->patchJson("/api/offers/{$offerIds[0]}/decision", ['decision' => 'rejected'], $this->customer())
             ->assertOk()->assertJsonPath('data.decision', 'rejected');
+        $this->getJson('/api/my/offers', $this->team(1))
+            ->assertOk()->assertJsonFragment(['id' => $offerIds[0], 'decision' => 'rejected']);
+        $this->getJson("/api/tasks/{$id}")->assertOk()->assertJsonPath('data.status', 'published');
     }
 
     public function test_zero_score_task_can_be_published_and_any_team_can_respond_repeatedly(): void
     {
         $id = $this->draft();
         $this->postJson("/api/tasks/{$id}/publish", ['confirmed' => true], $this->customer())
-            ->assertOk()->assertJsonPath('data.score', 0)->assertJsonPath('data.readinessLevel', 'draft');
+            ->assertOk()->assertJsonPath('data.score', 0)->assertJsonPath('data.readinessLevel', 'draft')
+            ->assertJsonPath('data.readinessLabel', 'Требует уточнения');
+        $this->getJson('/api/tasks')->assertOk()->assertJsonFragment(['id' => $id, 'score' => 0, 'status' => 'published']);
+        $this->getJson('/api/tasks', $this->team(2))->assertOk()->assertJsonFragment(['id' => $id, 'scope' => 'institution']);
         for ($i = 0; $i < 2; $i++) {
             $this->postJson("/api/tasks/{$id}/offers", [
                 'idea' => 'Идея', 'plan' => 'План', 'timeline' => 'Две недели',
@@ -218,6 +228,11 @@ class ApiTest extends TestCase
             'Access-Control-Request-Method' => 'POST',
             'Access-Control-Request-Headers' => 'content-type,x-demo-role,x-demo-id',
         ])->assertNoContent()->assertHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+        $this->options('/api/offers/1/decision', [], [
+            'Origin' => 'http://127.0.0.1:5173',
+            'Access-Control-Request-Method' => 'PATCH',
+            'Access-Control-Request-Headers' => 'content-type,x-demo-role,x-demo-id',
+        ])->assertNoContent()->assertHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5173');
     }
 
     public function test_demo_mode_can_be_disabled(): void

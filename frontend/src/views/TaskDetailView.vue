@@ -63,7 +63,10 @@ async function submitOffer() {
   offerError.value = null
   try {
     const result = await api.createOffer(task.value.id, payload)
-    if (current === offerRequestId) receipt.value = result
+    if (current === offerRequestId) {
+      receipt.value = result
+      task.value.offersCount = (task.value.offersCount ?? 0) + 1
+    }
   } catch (cause) {
     if (current === offerRequestId) offerError.value = cause
   } finally {
@@ -92,7 +95,10 @@ onBeforeUnmount(() => { requestId++; offerRequestId++ })
             <span><Icon name="layers" />{{ scopeLabel(task.scope) }}</span>
           </div>
         </div>
-        <RouterLink v-if="isOwner" class="button button-secondary" :to="'/tasks/' + task.id + '/edit'">Редактировать карточку <Icon name="arrow-up-right" /></RouterLink>
+        <div v-if="isOwner" class="form-actions detail-owner-actions">
+          <RouterLink v-if="task.status === 'published'" class="button" :to="'/tasks/' + task.id + '/offers'">Отклики ({{ task.offersCount ?? 0 }}) <Icon name="users" /></RouterLink>
+          <RouterLink class="button button-secondary" :to="'/tasks/' + task.id + '/edit'">Редактировать карточку <Icon name="arrow-up-right" /></RouterLink>
+        </div>
         <a v-else-if="isTeam && task.status === 'published'" class="button" href="#offer">Предложить решение <Icon name="arrow-up-right" /></a>
       </header>
 
@@ -106,7 +112,8 @@ onBeforeUnmount(() => { requestId++; offerRequestId++ })
             </section>
           </article>
 
-          <section id="offer" class="panel stack offer-panel" aria-labelledby="offer-title">
+          <p v-if="task.scope === 'institution' && task.status === 'published'" class="institution-access"><Icon name="users" />Задача для своего учреждения открыта всем командам.</p>
+          <section v-if="!isOwner" id="offer" class="panel stack offer-panel" aria-labelledby="offer-title">
             <div class="offer-heading">
               <span class="offer-heading-icon"><Icon :name="receipt ? 'check-circle' : 'send'" /></span>
               <div><p class="eyebrow">СЛЕДУЮЩИЙ ШАГ</p><h2 id="offer-title">Предложите своё решение</h2></div>
@@ -157,6 +164,7 @@ onBeforeUnmount(() => { requestId++; offerRequestId++ })
             <h2>{{ isOwner ? 'Ваша задача' : 'Есть идея решения?' }}</h2>
             <p class="muted">{{ isOwner ? (task.status === 'published' ? 'Карточка опубликована в каталоге. Актуальное описание поможет командам предложить подходящее решение.' : 'Проверьте описание и опубликуйте задачу, чтобы получить предложения от команд.') : 'Изучите описание и подготовьте отклик: идею, план работы и сроки.' }}</p>
             <div class="detail-offer-count"><span>Получено откликов</span><strong>{{ task.offersCount ?? 0 }}</strong></div>
+            <RouterLink v-if="isOwner && task.status === 'published'" class="button full-width" :to="'/tasks/' + task.id + '/offers'">Рассмотреть отклики <Icon name="arrow-right" /></RouterLink>
             <RouterLink v-if="isOwner" class="button button-secondary full-width" :to="'/tasks/' + task.id + '/edit'">{{ task.status === 'published' ? 'Дополнить описание' : 'Продолжить подготовку' }}<Icon name="arrow-right" /></RouterLink>
             <a v-else-if="task.status === 'published'" class="button full-width" href="#offer">{{ isTeam ? 'Перейти к отклику' : 'Как отправить отклик' }}<Icon name="arrow-right" /></a>
           </section>
@@ -170,7 +178,9 @@ onBeforeUnmount(() => { requestId++; offerRequestId++ })
 <style scoped>
 .detail-back-icon { transform: rotate(180deg); }
 .detail-heading { align-items: flex-start; padding-bottom: 1rem; }
-.detail-heading h1 { max-width: 820px; font-size: clamp(1.7rem, 2.5vw, 2.2rem); line-height: 1.25; }
+.detail-heading h1 { max-width: 820px; font-size: 2rem; line-height: 1.25; overflow-wrap: anywhere; }
+.detail-owner-actions { flex-shrink: 0; max-width: 290px; }
+.institution-access { display: flex; align-items: flex-start; gap: 8px; margin: 0; padding-block: 14px; border-block: 1px solid var(--border); color: var(--primary); }
 .detail-organization { display: flex; align-items: center; gap: .5rem; color: var(--muted); font-size: .88rem; margin: .85rem 0; }
 .detail-organization :deep(svg), .detail-meta :deep(svg) { width: 16px; height: 16px; }
 .detail-meta > span { display: inline-flex; align-items: center; gap: .35rem; font-size: .77rem; }

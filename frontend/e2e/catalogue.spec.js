@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 const listPattern = '**/api/tasks*'
-const apiBase = process.env.E2E_API_URL || 'http://127.0.0.1:8000/api'
+const apiBase = process.env.E2E_API_URL || 'http://127.0.0.1:18082/api'
 
 async function screenshot(page, testInfo, name) {
   const path = testInfo.outputPath(`${name}.png`)

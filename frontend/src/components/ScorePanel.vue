@@ -38,7 +38,7 @@ const criteria = computed(() => Object.entries(props.task?.scoreBreakdown || {})
 .score-panel__intro { margin: .75rem 0 1rem; font-size: .8rem; line-height: 1.6; }
 .score-panel__top { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
 .score-panel__number { display: flex; align-items: baseline; gap: .45rem; margin: 0; flex-shrink: 0; }
-.score-panel__number strong { font-size: 3.4rem; line-height: 1.1; font-weight: 650; letter-spacing: -.06em; color: var(--primary); }
+.score-panel__number strong { font-size: 3.4rem; line-height: 1.1; font-weight: 650; letter-spacing: 0; color: var(--primary); }
 .score-panel__number > span { font-size: .8rem; color: var(--muted); }
 .score-panel__level { padding: .4rem .6rem; border-radius: 7px; color: #24634e; background: #eaf5ef; font-size: .72rem; font-weight: 600; line-height: 1.4; }
 .score-panel__caption { margin: .9rem 0 1.2rem; font-size: .75rem; line-height: 1.55; }

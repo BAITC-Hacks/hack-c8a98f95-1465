@@ -1,6 +1,6 @@
-# AlemEdu Backend — участник 1
+# AlemEdu Backend
 
-Laravel 12, PHP 8.2+, SQLite, JSON API `/api`. Интерфейс Vue разрабатывается отдельно в `frontend/`.
+Laravel 12, PHP 8.2+, SQLite, JSON API `/api`. Интерфейс Vue находится в `frontend/`. [Единая инструкция запуска](../README.md) охватывает обе части проекта.
 
 ## Быстрый запуск
 
@@ -17,12 +17,12 @@ composer dev
 
 `composer setup` создаёт `.env` из `.env.example`, ключ приложения и файл SQLite, применяет миграции и добавляет демоданные. Повторный запуск сохраняет существующие записи и ключ. Секреты и база не коммитятся.
 
-API: http://127.0.0.1:8000/api/health
+API: http://127.0.0.1:18081/api/health
 
 Если порт занят:
 
 ```sh
-php artisan serve --host=127.0.0.1 --port=18081 --no-reload
+php artisan serve --host=127.0.0.1 --port=18083 --no-reload
 ```
 
 На Windows также можно запустить из корня:
@@ -46,15 +46,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\backend\start.ps1 -Port 18
 - Два демопрофиля заказчиков, пять команд, пять задач и пять откликов.
 - Проверки PHPUnit, реальный HTTP-сценарий и GitHub Actions.
 
-## Передача участнику 2
+При смене порта задайте тот же адрес в `frontend/.env` через `VITE_API_URL` и перезапустите Vite.
 
-1. Получить код из `main` после объединения `feature/backend-api`.
-2. Запустить backend по инструкции выше.
-3. Открыть [контракт API](docs/API.md): все поля JSON используют camelCase.
-4. Взять [готовые HTTP-запросы](docs/alemedu.http) и [JSON-примеры](docs/examples/).
-5. Для Axios использовать пример из контракта и переключатель демопрофилей.
+## Интеграция с frontend
 
-Все успешные ответы: `{"data": ...}`. Ошибки: `{"message": "...", "errors": {...}}`; `errors` есть при валидации. Внешний AI API, регистрация, пароли, загрузка файлов и frontend не входят в этот этап.
+Панель `/tasks/:id/offers` получает список через `GET /api/tasks/:id/offers` и отправляет решения через `PATCH /api/offers/:id/decision`. В теле нужен `decision: selected` или `decision: rejected`. Доступ проверяется по владельцу задачи. Выбор нескольких команд разрешён; статус публикации и рейтинг не меняются.
+
+Все успешные ответы: `{"data": ...}`. Ошибки: `{"message": "...", "errors": {...}}`; `errors` есть при валидации. Поля используют camelCase. См. [контракт API](docs/API.md), [готовые HTTP-запросы](docs/alemedu.http) и [JSON-примеры](docs/examples/).
 
 ## Роли без регистрации
 
@@ -118,7 +116,7 @@ composer validate --strict
 После запуска HTTP-сервера, в другом терминале:
 
 ```sh
-php scripts/smoke.php http://127.0.0.1:8000/api
+php scripts/smoke.php http://127.0.0.1:18081/api
 ```
 
 Скрипт создаёт новую задачу с 20 баллами, дополняет её до 100, публикует, отправляет отклик и выбирает команду. Он оставляет эти две новые записи для осмотра. Для другого порта поменяйте URL.

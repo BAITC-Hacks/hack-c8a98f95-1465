@@ -41,7 +41,7 @@ class TaskScorer
     public static function level(int $score): array
     {
         return match (true) {
-            $score < 40 => ['draft', 'Черновик, требует уточнения'],
+            $score < 40 => ['draft', 'Требует уточнения'],
             $score < 70 => ['working', 'Рабочая'],
             $score < 90 => ['ready', 'Готовая'],
             default => ['priority', 'Приоритетная'],

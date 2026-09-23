@@ -17,6 +17,7 @@ jobs:
     env:
       VITE_API_URL: http://127.0.0.1:8000/api
       E2E_API_URL: http://127.0.0.1:8000/api
+      E2E_PORT: '5173'
       DB_CONNECTION: sqlite
       DB_DATABASE: ${{ github.workspace }}/backend/database/frontend-e2e.sqlite
       DEMO_MODE: 'true'

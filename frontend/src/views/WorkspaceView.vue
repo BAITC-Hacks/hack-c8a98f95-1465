@@ -15,6 +15,7 @@ const isCustomer = computed(() => session.profile?.role === 'customer')
 const firstDraft = computed(() => isCustomer.value ? items.value.find(item => item.status === 'draft') : null)
 const primaryCount = computed(() => items.value.filter(item => isCustomer.value ? item.status === 'published' : item.decision === 'pending').length)
 const secondaryCount = computed(() => items.value.filter(item => isCustomer.value ? item.status === 'draft' : item.decision === 'selected').length)
+const offerCount = computed(() => items.value.reduce((total, task) => total + (task.offersCount ?? 0), 0))
 const identity = computed(() => session.profile ? profileKey(session.profile) : '')
 const decisionLabels = { pending: 'Ожидает решения', selected: 'Команда выбрана', rejected: 'Отклонён' }
 const dateFormatter = new Intl.DateTimeFormat('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' })
@@ -71,7 +72,8 @@ onBeforeUnmount(() => { requestId++ })
         <div class="panel workspace-metric"><span class="workspace-metric-icon"><Icon :name="isCustomer ? 'file-text' : 'check-circle'" /></span><div><p>{{ isCustomer ? 'Черновики' : 'Команда выбрана' }}</p><strong>{{ secondaryCount }}</strong></div></div>
       </section>
 
-      <section class="panel workspace-guide">
+      <div v-if="isCustomer" class="workspace-offer-summary"><Icon name="users" /><span>Отклики на ваши задачи: <strong>{{ offerCount }}</strong></span></div>
+      <section v-if="!isCustomer || !offerCount" class="workspace-guide">
         <span class="workspace-guide-icon"><Icon :name="isCustomer ? 'sparkles' : 'search'" /></span>
         <div>
           <p class="eyebrow">СЛЕДУЮЩИЙ ШАГ</p>
@@ -109,10 +111,11 @@ onBeforeUnmount(() => { requestId++ })
 
 <style scoped>
 .workspace-metrics { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
+.workspace-offer-summary { display: flex; align-items: center; gap: 10px; padding-block: 16px; border-block: 1px solid var(--border); color: var(--primary); }
 .workspace-metric { display: flex; align-items: center; gap: .9rem; padding: 1.2rem 1.4rem; }
 .workspace-metric-icon { display: inline-flex; padding: .7rem; color: var(--primary); border-radius: 10px; background: #eff6f2; }
 .workspace-metric p { margin: 0 0 .45rem; font-size: .75rem; color: var(--muted); }
-.workspace-metric strong { font-size: 1.8rem; line-height: 1; font-weight: 600; letter-spacing: -.04em; }
+.workspace-metric strong { font-size: 1.8rem; line-height: 1; font-weight: 600; letter-spacing: 0; }
 .workspace-guide { display: flex; align-items: flex-start; gap: 1rem; padding: 1.6rem 1.75rem; background: #f1f8f4; border-color: #dce9e1; }
 .workspace-guide-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 42px; height: 42px; background: white; border: 1px solid #dce9e1; border-radius: 10px; color: var(--primary); }
 .workspace-guide .eyebrow { margin: 0 0 .35rem; color: var(--primary); }

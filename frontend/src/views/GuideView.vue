@@ -61,7 +61,7 @@ const teamSteps = [
 .guide-page { gap: 1.6rem; }
 .guide-heading { padding: .3rem 0 .6rem; }
 .guide-heading .eyebrow { margin-bottom: .75rem; }
-.guide-heading h1 { font-size: clamp(1.85rem, 3.1vw, 2.55rem); letter-spacing: -.04em; line-height: 1.2; margin: 0 0 .85rem; }
+.guide-heading h1 { font-size: 2.55rem; letter-spacing: 0; line-height: 1.2; margin: 0 0 .85rem; }
 .guide-heading > p:last-child { color: var(--muted, #68756f); font-size: .95rem; line-height: 1.8; margin: 0; }
 .guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.2rem; }
 .guide-role-panel { display: flex; flex-direction: column; padding: 1.65rem; }
@@ -69,7 +69,7 @@ const teamSteps = [
 .guide-role-icon { display: grid; place-items: center; height: 45px; width: 45px; border-radius: 13px; color: var(--primary, #147d64); background: #eaf4ee; flex-shrink: 0; }
 .guide-role-icon-team { color: #736cb0; background: #f0eef8; }
 .guide-role-heading .eyebrow { font-size: .58rem; margin: 0 0 .35rem; }
-.guide-role-heading h2 { font-size: 1.35rem; letter-spacing: -.025em; margin: 0; }
+.guide-role-heading h2 { font-size: 1.35rem; letter-spacing: 0; margin: 0; }
 .guide-role-intro { font-size: .82rem; line-height: 1.75; margin: 1rem 0 0; padding-bottom: 1.2rem; border-bottom: 1px solid var(--border, #e3e8e5); }
 .guide-steps { list-style: none; padding: 1.3rem 0 0; margin: 0 0 1.5rem; display: flex; flex-direction: column; gap: 1.3rem; }
 .guide-step { display: flex; align-items: flex-start; gap: .85rem; }
@@ -80,7 +80,7 @@ const teamSteps = [
 .guide-rating-panel { display: flex; align-items: flex-start; gap: 1.25rem; padding: 1.65rem; border-radius: 15px; background: #edf5ef; border: 1px solid #dce9e0; scroll-margin-top: 1.5rem; }
 .guide-section-icon { width: 42px; height: 42px; flex-shrink: 0; border-radius: 12px; display: grid; place-items: center; color: var(--primary, #147d64); background: #fff; border: 1px solid #dce8df; }
 .guide-rating-copy .eyebrow { font-size: .6rem; margin: 0 0 .6rem; }
-.guide-rating-copy h2 { font-size: 1.2rem; letter-spacing: -.02em; margin: 0 0 .8rem; }
+.guide-rating-copy h2 { font-size: 1.2rem; letter-spacing: 0; margin: 0 0 .8rem; }
 .guide-rating-copy > p { font-size: .83rem; line-height: 1.8; max-width: 820px; color: #5e7365; margin: 0 0 .7rem; }
 .guide-rating-note { border-top: 1px solid #dce8df; padding-top: .85rem; margin-top: 1rem; display: flex; gap: .55rem; font-size: .76rem; line-height: 1.75; color: #456453; }
 .guide-rating-note svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; }

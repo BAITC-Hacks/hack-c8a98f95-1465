@@ -155,7 +155,7 @@ onBeforeUnmount(() => { disposed = true; requestId++; controller?.abort() })
 .home-hero { display: grid; grid-template-columns: 1.25fr 1fr; gap: 2rem; align-items: center; padding: .75rem 0 .35rem; }
 .hero-copy .eyebrow { display: flex; align-items: center; gap: .55rem; margin-bottom: 1.25rem; }
 .hero-dot, .hero-small-dot { display: inline-block; flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--primary, #147d64); }
-.hero-copy h1 { max-width: 650px; font-size: clamp(2rem, 3.6vw, 3.15rem); line-height: 1.15; letter-spacing: -.045em; font-weight: 750; margin: 0 0 1.1rem; }
+.hero-copy h1 { max-width: 650px; font-size: 3.15rem; line-height: 1.15; letter-spacing: 0; font-weight: 750; margin: 0 0 1.1rem; }
 .hero-copy h1 span { color: var(--primary, #147d64); }
 .hero-description { font-size: 1rem; color: var(--muted, #68756f); line-height: 1.8; max-width: 530px; margin-bottom: 1.6rem; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem; }
@@ -170,7 +170,7 @@ onBeforeUnmount(() => { disposed = true; requestId++; controller?.abort() })
 .visual-card-top { display: flex; justify-content: space-between; align-items: center; gap: .5rem; margin-bottom: .85rem; }
 .visual-icon { width: 35px; height: 35px; display: grid; place-items: center; border-radius: 10px; color: #147d64; background: #eaf4ee; }
 .visual-card-tag { font-size: .59rem; font-weight: 600; color: #78877d; }
-.visual-project-card > strong { display: block; font-size: 1.3rem; line-height: 1.35; letter-spacing: -.025em; color: #203c30; }
+.visual-project-card > strong { display: block; font-size: 1.3rem; line-height: 1.35; letter-spacing: 0; color: #203c30; }
 .visual-project-card > p { font-size: .75rem; line-height: 1.6; color: #738276; margin: .55rem 0 .9rem; }
 .visual-check { border-top: 1px solid #eff3f0; padding-top: .75rem; display: flex; align-items: center; gap: .45rem; color: #147d64; font-size: .68rem; font-weight: 600; }
 .visual-check svg { width: 15px; height: 15px; }
@@ -189,7 +189,7 @@ onBeforeUnmount(() => { disposed = true; requestId++; controller?.abort() })
 .journey-card { padding: 1.65rem 1.8rem 1.35rem; scroll-margin-top: 1.5rem; }
 .journey-heading { display: flex; align-items: center; justify-content: space-between; gap: 1.5rem; }
 .journey-heading .eyebrow { margin-bottom: .45rem; font-size: .6rem; }
-.journey-heading h2 { margin: 0; font-size: 1.45rem; letter-spacing: -.03em; }
+.journey-heading h2 { margin: 0; font-size: 1.45rem; letter-spacing: 0; }
 .journey-heading .muted { margin: .4rem 0 0; font-size: .82rem; }
 .role-switch { display: flex; gap: .2rem; background: var(--surface-muted, #f4f6f5); border: 1px solid var(--border, #e3e8e5); padding: .3rem; border-radius: 11px; flex-shrink: 0; }
 .role-choice { appearance: none; display: flex; align-items: center; justify-content: center; gap: .5rem; border: 1px solid transparent; padding: .65rem .9rem; border-radius: 8px; background: transparent; color: var(--muted, #68756f); font: inherit; font-size: .78rem; font-weight: 600; cursor: pointer; transition: background .15s, color .15s, box-shadow .15s; }
@@ -209,7 +209,7 @@ onBeforeUnmount(() => { disposed = true; requestId++; controller?.abort() })
 .home-profile-hint button { flex-shrink: 0; }
 .home-section-heading { display: flex; align-items: flex-end; justify-content: space-between; gap: 1rem; margin-bottom: 1.2rem; }
 .home-section-heading .eyebrow { font-size: .59rem; margin-bottom: .5rem; }
-.home-section-heading h2 { margin: 0; font-size: 1.4rem; letter-spacing: -.025em; }
+.home-section-heading h2 { margin: 0; font-size: 1.4rem; letter-spacing: 0; }
 .home-text-link { display: inline-flex; align-items: center; gap: .5rem; color: var(--primary, #147d64); text-decoration: none; white-space: nowrap; font-size: .76rem; font-weight: 600; }
 .home-text-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .home-text-link svg { width: 16px; height: 16px; }
@@ -238,7 +238,7 @@ onBeforeUnmount(() => { disposed = true; requestId++; controller?.abort() })
 }
 @media (max-width: 900px) {
   .home-hero { grid-template-columns: 1fr; }
-  .hero-copy h1 { font-size: clamp(2.2rem, 6vw, 3rem); }
+  .hero-copy h1 { font-size: 3rem; }
   .hero-description { font-size: 1rem; }
   .hero-visual { display: none; }
   .journey-heading { align-items: flex-start; flex-direction: column; gap: 1.1rem; }
