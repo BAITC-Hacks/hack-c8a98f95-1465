@@ -1,0 +1,12 @@
+/frontend/node_modules/
+/frontend/dist/
+**/.env
+**/.env.*
+!**/.env.example
+**/vendor/
+**/*.sqlite
+**/*.sqlite-*
+**/.phpunit.cache/
+**/.phpunit.result.cache
+.DS_Store
+Thumbs.db

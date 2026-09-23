@@ -1,0 +1,94 @@
+{
+  "data": {
+    "id": 6,
+    "ownerId": 1,
+    "title": "Разговорный английский для первокурсников",
+    "organization": "Демо университет «Алем»",
+    "region": "Алматы",
+    "category": "Языки",
+    "scope": "kazakhstan",
+    "context": "Первокурсникам трудно регулярно практиковать разговорный английский.",
+    "users": "Первокурсники с уровнем A2–B1.",
+    "materials": "Синтетические учебные диалоги, без персональных данных.",
+    "constraints": "Четыре недели; веб-приложение для мобильного браузера.",
+    "expectedOutcome": "Прототип тренажёра разговорной практики.",
+    "successCriteria": "Пять тестовых диалогов можно пройти без ошибок.",
+    "contact": "demo@example.invalid, еженедельная онлайн-встреча.",
+    "score": 100,
+    "readinessLevel": "priority",
+    "readinessLabel": "Приоритетная",
+    "scoreBreakdown": {
+      "context": {
+        "label": "Контекст и потребность",
+        "points": 20,
+        "maxPoints": 20,
+        "filled": true,
+        "confirmed": true,
+        "hint": "Поле заполнено и подтверждено."
+      },
+      "materials": {
+        "label": "Данные и материалы",
+        "points": 20,
+        "maxPoints": 20,
+        "filled": true,
+        "confirmed": true,
+        "hint": "Поле заполнено и подтверждено."
+      },
+      "expectedOutcome": {
+        "label": "Ожидаемый результат",
+        "points": 15,
+        "maxPoints": 15,
+        "filled": true,
+        "confirmed": true,
+        "hint": "Поле заполнено и подтверждено."
+      },
+      "successCriteria": {
+        "label": "Критерии успеха",
+        "points": 15,
+        "maxPoints": 15,
+        "filled": true,
+        "confirmed": true,
+        "hint": "Поле заполнено и подтверждено."
+      },
+      "constraints": {
+        "label": "Ограничения",
+        "points": 10,
+        "maxPoints": 10,
+        "filled": true,
+        "confirmed": true,
+        "hint": "Поле заполнено и подтверждено."
+      },
+      "users": {
+        "label": "Пользователи",
+        "points": 10,
+        "maxPoints": 10,
+        "filled": true,
+        "confirmed": true,
+        "hint": "Поле заполнено и подтверждено."
+      },
+      "contact": {
+        "label": "Связь с заказчиком",
+        "points": 10,
+        "maxPoints": 10,
+        "filled": true,
+        "confirmed": true,
+        "hint": "Поле заполнено и подтверждено."
+      }
+    },
+    "confirmedFields": [
+      "context",
+      "materials",
+      "expectedOutcome",
+      "successCriteria",
+      "constraints",
+      "users",
+      "contact"
+    ],
+    "status": "published",
+    "confirmedAt": "2026-09-23T10:09:37.000000Z",
+    "publishedAt": "2026-09-23T10:09:37.000000Z",
+    "createdAt": "2026-09-23T10:09:37.000000Z",
+    "updatedAt": "2026-09-23T10:09:37.000000Z",
+    "offersCount": 1
+  }
+}

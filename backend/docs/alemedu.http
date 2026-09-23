@@ -1,0 +1,124 @@
+@baseUrl = http://127.0.0.1:8000/api
+
+### Health
+GET {{baseUrl}}/health
+
+### Profiles for the role switcher
+GET {{baseUrl}}/demo/profiles
+
+### Five sample briefs
+GET {{baseUrl}}/demo/briefs
+
+### Catalog (all published tasks, including low scores)
+GET {{baseUrl}}/tasks?sort=score
+
+### My tasks, including drafts
+GET {{baseUrl}}/my/tasks
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+### AI questions; does not save a task
+POST {{baseUrl}}/ai/questions
+Content-Type: application/json
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+{
+  "description": "Первокурсникам трудно регулярно практиковать разговорный английский."
+}
+
+### Create a draft (20 points); run before the requests below
+# @name createTask
+POST {{baseUrl}}/tasks
+Content-Type: application/json
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+{
+  "title": "Разговорный английский для первокурсников",
+  "organization": "Демо университет «Алем»",
+  "region": "Алматы",
+  "scope": "kazakhstan",
+  "category": "Языки",
+  "context": "Первокурсникам трудно регулярно практиковать разговорный английский.",
+  "confirmedFields": [
+    "context"
+  ]
+}
+
+### Read the draft as its owner
+GET {{baseUrl}}/tasks/{{createTask.response.body.$.data.id}}
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+### Complete and confirm the fields (100 points)
+PUT {{baseUrl}}/tasks/{{createTask.response.body.$.data.id}}
+Content-Type: application/json
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+{
+  "users": "Первокурсники с уровнем A2–B1.",
+  "materials": "Синтетические учебные диалоги, без персональных данных.",
+  "constraints": "Четыре недели; веб-приложение для мобильного браузера.",
+  "expectedOutcome": "Прототип тренажёра разговорной практики.",
+  "successCriteria": "Пять тестовых диалогов можно пройти без ошибок.",
+  "contact": "demo@example.invalid, еженедельная онлайн-встреча.",
+  "confirmedFields": [
+    "context",
+    "materials",
+    "expectedOutcome",
+    "successCriteria",
+    "constraints",
+    "users",
+    "contact"
+  ]
+}
+
+### Explicit publication
+POST {{baseUrl}}/tasks/{{createTask.response.body.$.data.id}}/publish
+Content-Type: application/json
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+{"confirmed": true}
+
+### Submit a team's offer
+# @name createOffer
+POST {{baseUrl}}/tasks/{{createTask.response.body.$.data.id}}/offers
+Content-Type: application/json
+X-Demo-Role: team
+X-Demo-Id: 1
+
+{
+  "idea": "Тренажёр диалогов с выбором учебных ситуаций.",
+  "plan": "Уточнить сценарии, собрать прототип, провести проверку и показать результат.",
+  "timeline": "Четыре недели.",
+  "prototypeLink": "https://example.invalid/alemedu-demo"
+}
+
+### Owner reads all offers
+GET {{baseUrl}}/tasks/{{createTask.response.body.$.data.id}}/offers
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+### Manually choose a team
+PATCH {{baseUrl}}/offers/{{createOffer.response.body.$.data.id}}/decision
+Content-Type: application/json
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+{"decision": "selected"}
+
+### Team sees the saved decision
+GET {{baseUrl}}/my/offers
+X-Demo-Role: team
+X-Demo-Id: 1
+
+### Owner can change the decision
+PATCH {{baseUrl}}/offers/{{createOffer.response.body.$.data.id}}/decision
+Content-Type: application/json
+X-Demo-Role: customer
+X-Demo-Id: 1
+
+{"decision": "rejected"}

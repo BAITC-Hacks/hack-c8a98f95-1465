@@ -1,0 +1,17 @@
+{
+  "users": "Первокурсники с уровнем A2–B1.",
+  "materials": "Синтетические учебные диалоги, без персональных данных.",
+  "constraints": "Четыре недели; веб-приложение для мобильного браузера.",
+  "expectedOutcome": "Прототип тренажёра разговорной практики.",
+  "successCriteria": "Пять тестовых диалогов можно пройти без ошибок.",
+  "contact": "demo@example.invalid, еженедельная онлайн-встреча.",
+  "confirmedFields": [
+    "context",
+    "materials",
+    "expectedOutcome",
+    "successCriteria",
+    "constraints",
+    "users",
+    "contact"
+  ]
+}

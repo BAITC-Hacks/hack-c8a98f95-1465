@@ -1,0 +1,33 @@
+name: Backend checks
+on:
+  push:
+    paths: ['backend/**', '.github/workflows/backend.yml']
+  pull_request:
+    paths: ['backend/**', '.github/workflows/backend.yml']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: ['8.2', '8.4']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, pdo_sqlite
+          coverage: none
+      - run: composer install --no-interaction --prefer-dist
+        working-directory: backend
+      - run: composer setup
+        working-directory: backend
+      - run: composer validate --strict
+        working-directory: backend
+      - run: vendor/bin/pint --test
+        working-directory: backend
+      - run: php artisan test
+        working-directory: backend
